@@ -133,6 +133,35 @@ input:focus { border-color: var(--coral); }
 .flash.wrong { background: var(--coral); color: #fff; }
 .flash .small { color: inherit; opacity: 0.9; }
 
+.flash.article { background: var(--amber); color: var(--ink); }
+
+/* --- Multiple choice --- */
+.options { display: grid; gap: 8px; }
+.option {
+  text-align: left; background: #efe6f7; display: flex; align-items: center; gap: 10px;
+}
+.option:hover { background: #e3d6f0; }
+.key {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
+  background: var(--card); font-size: 0.8rem; color: var(--muted);
+}
+
+/* --- Vocab menu --- */
+.tile.wide { grid-column: span 2; }
+.tile.vocab-tile { background: var(--mint); font-size: 1.1rem; }
+.step { font-family: var(--body); font-size: 1rem; margin: 0 0 10px; color: var(--ghost); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-weight: 500; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--bg-2); background: transparent; color: #fff;
+}
+.chip span { opacity: 0.6; font-size: 0.8rem; margin-left: 4px; }
+.chip.on { background: var(--coral); border-color: var(--coral); }
+.levels { display: flex; flex-direction: column; gap: 10px; }
+.level { display: flex; align-items: center; gap: 14px; text-align: left; background: var(--card); }
+.level > span:last-child { display: flex; flex-direction: column; gap: 2px; }
+.level-emoji { font-size: 1.8rem; }
+
 /* --- Result --- */
 .record { font-family: var(--display); font-size: 1.5rem; color: var(--coral); margin: 0; animation: pop 0.4s; }
 .final-score { font-family: var(--display); font-size: 4rem; font-weight: 900; margin: 0; line-height: 1; }

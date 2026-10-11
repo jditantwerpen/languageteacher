@@ -1,9 +1,11 @@
 // App shell: login state and simple screen switching (no router needed yet).
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
+import { speedRoundConfig, vocabConfig } from './lib/modes'
 import Login from './screens/Login'
 import Home from './screens/Home'
-import SpeedRound from './screens/SpeedRound'
+import VocabMenu from './screens/VocabMenu'
+import Round from './screens/Round'
 import Result from './screens/Result'
 
 export default function App() {
@@ -19,27 +21,47 @@ export default function App() {
   if (session === undefined) return null
   if (!session) return <Login />
 
+  const goHome = () => setScreen({ name: 'home' })
+  // Where "Home" on the result screen leads: back to the menu we came from
+  const back = screen.back ?? { name: 'home' }
+
+  /** Start a round; round counter forces a fresh Round component. */
+  const play = (config, backTo) =>
+    setScreen({ name: 'round', config, back: backTo, round: (screen.round ?? 0) + 1 })
+
   switch (screen.name) {
-    case 'speed':
+    case 'vocabMenu':
       return (
-        <SpeedRound
-          // key forces a fresh round when "Nog eens" is pressed
+        <VocabMenu
+          topicSlug={screen.topicSlug}
+          onBack={goHome}
+          onStart={(opts) => play(vocabConfig(opts), { name: 'vocabMenu', topicSlug: screen.topicSlug })}
+        />
+      )
+    case 'round':
+      return (
+        <Round
           key={screen.round}
-          skillId={screen.skillId}
-          title={screen.title}
+          config={screen.config}
           onDone={(result) => setScreen({ ...screen, name: 'result', result })}
-          onQuit={() => setScreen({ name: 'home' })}
+          onQuit={() => setScreen(back)}
         />
       )
     case 'result':
       return (
         <Result
           result={screen.result}
-          onAgain={() => setScreen({ ...screen, name: 'speed', round: (screen.round ?? 0) + 1 })}
-          onHome={() => setScreen({ name: 'home' })}
+          config={screen.config}
+          onAgain={() => play(screen.config, back)}
+          onHome={() => setScreen(back)}
         />
       )
     default:
-      return <Home onStart={(opts) => setScreen({ name: 'speed', round: 0, ...opts })} />
+      return (
+        <Home
+          onStart={(opts) => play(speedRoundConfig(opts), { name: 'home' })}
+          onVocab={(topicSlug) => setScreen({ name: 'vocabMenu', topicSlug })}
+        />
+      )
   }
 }
