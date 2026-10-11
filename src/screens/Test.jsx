@@ -56,7 +56,7 @@ function shownAnswer(ex) {
   return ex.correct_answer
 }
 
-export default function Test({ onHome }) {
+export default function Test({ onHome, onTheory, onWords }) {
   const [phase, setPhase] = useState('loading') // loading | intro | playing | saving | done
   const [questions, setQuestions] = useState([])
   const [topicId, setTopicId] = useState(null)
@@ -169,6 +169,10 @@ export default function Test({ onHome }) {
           <p className="small">Je ziet de juiste antwoorden pas op het einde. Fout accent of lidwoord = halve punt.</p>
           {best !== null && <p>🏆 Je beste score: <strong>{best}/20</strong></p>}
         </div>
+        <div className="test-links">
+          <button className="btn small-btn" onClick={onTheory}>📖 Eerst theorie herhalen</button>
+          <button className="btn small-btn" onClick={onWords}>📋 Woordenlijst</button>
+        </div>
         <button className="btn primary huge" onClick={begin}>Start de toets</button>
         <button className="link" onClick={onHome}>Terug</button>
       </main>
@@ -233,6 +237,8 @@ export default function Test({ onHome }) {
         )}
 
         <div className="actions">
+          <button className="btn" onClick={onTheory}>📖 Theorie</button>
+          <button className="btn" onClick={onWords}>📋 Woorden</button>
           <button className="btn primary" onClick={onHome}>Home</button>
         </div>
       </main>

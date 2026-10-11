@@ -1,4 +1,4 @@
-// Home: league tier and the choice of speed round.
+// Home: league tier, chapters (learn + practise + test) and speed rounds.
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 import { loadLeague, loadSkills, TOPICS } from '../lib/data'
@@ -6,7 +6,7 @@ import { loadLeague, loadSkills, TOPICS } from '../lib/data'
 const TIER_EMOJI = { Bronze: '🥉', Silver: '🥈', Gold: '🥇', Platinum: '💠', Diamond: '💎' }
 const TIER_NL = { Bronze: 'Brons', Silver: 'Zilver', Gold: 'Goud', Platinum: 'Platina', Diamond: 'Diamant' }
 
-export default function Home({ onStart, onVocab, onTest }) {
+export default function Home({ onStart, onVocab, onTest, onTheory, onWords }) {
   const [skills, setSkills] = useState([])
   const [league, setLeague] = useState(null)
   const [error, setError] = useState('')
@@ -47,10 +47,16 @@ export default function Home({ onStart, onVocab, onTest }) {
 
       <section>
         <h2>✈️ Unidad 6 · ¡Vamos de viaje!</h2>
-        <p className="small">Oefen de woorden en test jezelf.</p>
+        <p className="small">Eerst leren, dan oefenen, dan jezelf testen.</p>
         <div className="grid">
+          <button className="btn tile learn-tile" onClick={() => onTheory('unidad6')}>
+            📖 Theorie
+          </button>
+          <button className="btn tile learn-tile" onClick={() => onWords(TOPICS.unidad6)}>
+            📋 Woordenlijst
+          </button>
           <button className="btn tile wide vocab-tile" onClick={() => onVocab(TOPICS.unidad6)}>
-            📚 Woordenschat · 4 niveaus, 2 richtingen
+            📚 Woordenschat oefenen · 4 niveaus
           </button>
           <button className="btn tile wide test-tile" onClick={onTest}>
             📝 Toets Unidad 6 · score op 20
@@ -59,9 +65,14 @@ export default function Home({ onStart, onVocab, onTest }) {
       </section>
 
       <section>
-        <h2>⚡ Speed round · Tiempos del pasado</h2>
-        <p className="small">60 seconden. Juist op rij = combo. Versla je eigen ghost.</p>
+        <h2>⚡ Tiempos del pasado</h2>
+        <p className="small">Speed round: 60 seconden. Juist op rij = combo. Versla je eigen ghost.</p>
         <div className="grid">
+          <button className="btn tile wide learn-tile" onClick={() => onTheory('pasado')}>
+            📖 Theorie: de 3 verleden tijden
+          </button>
+        </div>
+        <div className="grid speed-grid">
           <button className="btn tile" onClick={() => onStart({ skillId: null, title: 'Alle tijden' })}>
             Alle tijden
           </button>

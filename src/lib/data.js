@@ -79,6 +79,18 @@ export async function loadVocabOverview(topicSlug) {
   }
 }
 
+/** All words of a chapter, in list order, plus the chapter title. */
+export async function loadVocabItems(topicSlug) {
+  const rows = unwrap(
+    await supabase
+      .from('vocab_items')
+      .select('id, term_es, term_nl, category, note_nl, sort_order, topics!inner(slug, title)')
+      .eq('topics.slug', topicSlug)
+      .order('sort_order'),
+  )
+  return { title: rows[0]?.topics.title ?? '', items: rows }
+}
+
 /** Vocab exercises for one direction, optionally one chapter part, shuffled. */
 export async function loadVocab(topicId, direction, category) {
   let query = supabase

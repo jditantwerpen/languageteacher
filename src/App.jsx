@@ -2,12 +2,15 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
 import { speedRoundConfig, vocabConfig } from './lib/modes'
+import { TOPICS } from './lib/data'
 import Login from './screens/Login'
 import Home from './screens/Home'
 import VocabMenu from './screens/VocabMenu'
 import Round from './screens/Round'
 import Result from './screens/Result'
 import Test from './screens/Test'
+import Theory from './screens/Theory'
+import WordList from './screens/WordList'
 
 export default function App() {
   const [session, setSession] = useState(undefined) // undefined = still checking
@@ -32,7 +35,25 @@ export default function App() {
 
   switch (screen.name) {
     case 'test':
-      return <Test key={screen.round} onHome={goHome} />
+      return (
+        <Test
+          key={screen.round}
+          onHome={goHome}
+          onTheory={() => setScreen({ name: 'theory', id: 'unidad6', back: screen })}
+          onWords={() => setScreen({ name: 'words', topicSlug: TOPICS.unidad6, back: screen })}
+        />
+      )
+    case 'theory':
+      return (
+        <Theory
+          key={screen.id}
+          id={screen.id}
+          onOpen={(id) => setScreen({ name: 'theory', id, back: screen })}
+          onBack={() => setScreen(back)}
+        />
+      )
+    case 'words':
+      return <WordList topicSlug={screen.topicSlug} onBack={() => setScreen(back)} />
     case 'vocabMenu':
       return (
         <VocabMenu
@@ -65,6 +86,8 @@ export default function App() {
           onStart={(opts) => play(speedRoundConfig(opts), { name: 'home' })}
           onVocab={(topicSlug) => setScreen({ name: 'vocabMenu', topicSlug })}
           onTest={() => setScreen({ name: 'test', round: (screen.round ?? 0) + 1 })}
+          onTheory={(id) => setScreen({ name: 'theory', id })}
+          onWords={(topicSlug) => setScreen({ name: 'words', topicSlug })}
         />
       )
   }
