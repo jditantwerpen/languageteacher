@@ -49,7 +49,7 @@ export async function loadSkills() {
 export async function loadConjugations(skillId) {
   let query = supabase
     .from('exercises')
-    .select('id, prompt, correct_answer, accepted_answers, feedback_nl')
+    .select('id, type, prompt, correct_answer, accepted_answers, feedback_nl')
     .eq('type', 'conjugation')
     .limit(1000)
   if (skillId) query = query.eq('skill_id', skillId)
@@ -83,7 +83,7 @@ export async function loadVocabOverview(topicSlug) {
 export async function loadVocab(topicId, direction, category) {
   let query = supabase
     .from('exercises')
-    .select('id, prompt, correct_answer, accepted_answers, feedback_nl')
+    .select('id, type, prompt, correct_answer, accepted_answers, feedback_nl')
     .eq('type', 'vocab')
     .eq('topic_id', topicId)
     .eq('prompt->>direction', direction)
