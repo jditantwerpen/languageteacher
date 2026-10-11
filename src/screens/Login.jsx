@@ -81,7 +81,11 @@ export default function Login() {
           {busy ? 'Bezig…' : mode === 'login' ? 'Inloggen' : 'Account maken'}
         </button>
         {error && <p className="error">{error}</p>}
-        <p className="small">Je e-mailadres gebruiken we alleen om in te loggen.</p>
+        <p className="small">
+          {mode === 'signup'
+            ? 'Na het aanmaken keurt je leerkracht je account goed.'
+            : 'Je e-mailadres gebruiken we alleen om in te loggen.'}
+        </p>
       </form>
     </main>
   )

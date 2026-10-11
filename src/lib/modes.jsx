@@ -7,7 +7,14 @@
 //   load()     returns the exercises for the round
 //   Prompt     component that shows the question
 //   describe() one-line label for the mistakes list
-import { answerLang, loadConjugations, loadVocab } from './data'
+import { answerLang, loadConjugations, loadMarkers, loadVocab } from './data'
+
+/** Dutch-friendly names of the three past tenses (used as answer options). */
+export const TENSE_NL = {
+  preterito_compuesto: 'Pretérito compuesto',
+  imperfecto: 'Imperfecto',
+  indefinido: 'Indefinido',
+}
 
 /** The four vocabulary levels: both directions, choice then typing. */
 export const VOCAB_LEVELS = [
@@ -37,6 +44,31 @@ export function VocabPrompt({ exercise }) {
       {p.note && <p className="nl">{p.note}</p>}
     </>
   )
+}
+
+function MarkerPrompt({ exercise }) {
+  return (
+    <>
+      <p className="small">🔎 Welke tijd? Zoek het signaalwoord.</p>
+      <p className="verb">{exercise.prompt.text}</p>
+    </>
+  )
+}
+
+/** 60-second race: pick the right past tense from the time marker. */
+export function markerConfig() {
+  return {
+    mode: 'marker_detective',
+    scope: { scopeId: null },
+    title: '🔎 Marker detective',
+    kind: 'choice',
+    load: loadMarkers,
+    Prompt: MarkerPrompt,
+    getOptions: (ex) => ex.prompt.options,
+    optionLabel: (o) => TENSE_NL[o] ?? o,
+    showAnswer: (ex) => `${TENSE_NL[ex.correct_answer]}: ${ex.prompt.form}`,
+    describe: (ex) => ex.prompt.text,
+  }
 }
 
 /** 60-second conjugation race (past tenses). */

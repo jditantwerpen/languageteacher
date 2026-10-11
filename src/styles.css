@@ -238,3 +238,25 @@ td:first-child { font-weight: 500; }
 .masked em { color: transparent !important; }
 .center-text { text-align: center; color: var(--ghost) !important; }
 .test-links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+/* --- Approval & admin --- */
+.pending p { margin: 0; }
+.tile.admin-tile { background: var(--amber); }
+.user-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #ece2f3; }
+.user-row:last-child { border-bottom: 0; }
+.user-row > div { display: flex; flex-direction: column; min-width: 0; }
+.user-row strong { overflow: hidden; text-overflow: ellipsis; }
+.user-row .btn { flex-shrink: 0; padding: 10px 14px; }
+
+/* --- Games: stories & bosses --- */
+.tile.game-tile { background: #ffd2a8; }
+.story-text { margin: 0; line-height: 1.6; font-size: 1.02rem; }
+.story-text .gap { background: var(--coral); color: #fff; border-radius: 6px; padding: 0 6px; font-weight: 700; }
+.level.defeated { background: #dcf8eb; }
+.hearts { font-size: 1.3rem; letter-spacing: 2px; }
+.boss-arena { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.boss-arena .small { color: var(--ghost); }
+.boss-emoji { font-size: 4rem; line-height: 1; margin: 0; transition: transform 0.15s; }
+.boss-emoji.hit { transform: scale(0.8) rotate(-12deg); filter: brightness(1.6); }
+.boss-bar { flex: none; width: 100%; height: 14px; }
+.fill.boss-hp { background: linear-gradient(90deg, var(--coral), var(--amber)); }

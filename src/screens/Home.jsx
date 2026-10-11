@@ -6,7 +6,7 @@ import { loadLeague, loadSkills, TOPICS } from '../lib/data'
 const TIER_EMOJI = { Bronze: '🥉', Silver: '🥈', Gold: '🥇', Platinum: '💠', Diamond: '💎' }
 const TIER_NL = { Bronze: 'Brons', Silver: 'Zilver', Gold: 'Goud', Platinum: 'Platina', Diamond: 'Diamant' }
 
-export default function Home({ onStart, onVocab, onTest, onTheory, onWords }) {
+export default function Home({ onStart, onVocab, onTest, onTheory, onWords, isAdmin, onAdmin, onMarker, onStories, onBosses }) {
   const [skills, setSkills] = useState([])
   const [league, setLeague] = useState(null)
   const [error, setError] = useState('')
@@ -33,6 +33,12 @@ export default function Home({ onStart, onVocab, onTest, onTheory, onWords }) {
           <button className="link" onClick={() => supabase.auth.signOut()}>Uitloggen</button>
         </div>
       </header>
+
+      {isAdmin && (
+        <button className="btn tile wide admin-tile" onClick={onAdmin}>
+          👩‍🏫 Beheer · accounts goedkeuren
+        </button>
+      )}
 
       {league && (
         <section className="card league">
@@ -84,8 +90,16 @@ export default function Home({ onStart, onVocab, onTest, onTheory, onWords }) {
         </div>
       </section>
 
-      <section className="card soon">
-        <p className="small">Binnenkort: 👑 Boss battles · 🔎 Marker detective · 📖 Verhalen</p>
+      <section>
+        <h2>🎮 Spellen · Tiempos del pasado</h2>
+        <p className="small">Oefen de keuze tussen de tijden en de onregelmatige werkwoorden.</p>
+        <div className="grid">
+          <button className="btn tile wide game-tile" onClick={onMarker}>
+            🔎 Marker detective · welke tijd?
+          </button>
+          <button className="btn tile game-tile" onClick={onStories}>📖 Verhalen</button>
+          <button className="btn tile game-tile" onClick={onBosses}>👑 Boss battles</button>
+        </div>
       </section>
 
       {error && <p className="error">Laden mislukt: {error}</p>}

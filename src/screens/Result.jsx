@@ -37,7 +37,8 @@ export default function Result({ result, config, onAgain, onHome }) {
               <li key={i} className={m.result}>
                 <span className="small">{config.describe(m.exercise)}</span>
                 <span>
-                  <s>{m.given}</s> → <strong>{m.exercise.correct_answer}</strong>
+                  <s>{config.optionLabel?.(m.given) ?? m.given}</s> →{' '}
+                  <strong>{config.showAnswer?.(m.exercise) ?? m.exercise.correct_answer}</strong>
                 </span>
                 {(WARNING_TEXT[m.result] || m.exercise.feedback_nl) && (
                   <span className="small">{WARNING_TEXT[m.result] ?? m.exercise.feedback_nl}</span>

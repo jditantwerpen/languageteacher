@@ -60,7 +60,11 @@ export default function Round({ config, onDone, onQuit }) {
 
   // Multiple-choice options for the current question
   const options = useMemo(
-    () => (kind === 'choice' && exercise ? buildOptions(exercise, exercises) : []),
+    () =>
+      kind === 'choice' && exercise
+        ? config.getOptions?.(exercise) ?? buildOptions(exercise, exercises)
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [kind, exercise, exercises],
   )
 
@@ -99,7 +103,7 @@ export default function Round({ config, onDone, onQuit }) {
       elapsedMs: Date.now() - startTime.current,
     })
     setScoreState((s) => applyResult(s, result))
-    setFlash({ result, correct: exercise.correct_answer, feedback: exercise.feedback_nl })
+    setFlash({ result, correct: config.showAnswer?.(exercise) ?? exercise.correct_answer, feedback: exercise.feedback_nl })
     setInput('')
     setIndex((i) => i + 1)
   }
@@ -191,7 +195,7 @@ export default function Round({ config, onDone, onQuit }) {
           <div className="options">
             {options.map((o, i) => (
               <button key={o} className="btn option" onClick={() => answer(o)} disabled={phase !== 'playing'}>
-                <span className="key">{i + 1}</span> {o}
+                <span className="key">{i + 1}</span> {config.optionLabel?.(o) ?? o}
               </button>
             ))}
           </div>

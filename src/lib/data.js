@@ -168,6 +168,87 @@ export async function loadTestHistory(topicId) {
   )
 }
 
+// ---------------------------------------------------------------------
+// Games: marker detective, stories, boss battles (past-tenses topic)
+// ---------------------------------------------------------------------
+
+const EXERCISE_FIELDS = 'id, type, prompt, correct_answer, accepted_answers, feedback_nl, story_id, sort_order'
+
+/** Tense-choice sentences for marker detective, shuffled. */
+export async function loadMarkers() {
+  const topicId = await loadTopicId(TOPICS.pasado)
+  return loadByType(topicId, 'marker_choice')
+}
+
+/** The student's personal records for one mode, as { scope_key: record }. */
+export async function loadMyRecords(mode) {
+  const rows = unwrap(
+    await supabase.from('personal_records').select('scope_key, best_score, best_accuracy').eq('mode', mode),
+  )
+  return Object.fromEntries(rows.map((r) => [r.scope_key, r]))
+}
+
+/** Stories of the past-tenses topic with their number of questions. */
+export async function loadStories() {
+  const topicId = await loadTopicId(TOPICS.pasado)
+  const [stories, exercises] = await Promise.all([
+    supabase.from('stories').select('id, slug, title, sort_order').eq('topic_id', topicId).order('sort_order').then(unwrap),
+    supabase.from('exercises').select('story_id').eq('topic_id', topicId).not('story_id', 'is', null).limit(1000).then(unwrap),
+  ])
+  return stories.map((s) => ({ ...s, count: exercises.filter((e) => e.story_id === s.id).length }))
+}
+
+/** All questions of one story, in reading order. */
+export async function loadStoryExercises(storyId) {
+  return unwrap(
+    await supabase.from('exercises').select(EXERCISE_FIELDS).eq('story_id', storyId).order('sort_order'),
+  )
+}
+
+/** Bosses of the past-tenses topic, in order. */
+export async function loadBosses() {
+  const topicId = await loadTopicId(TOPICS.pasado)
+  return unwrap(
+    await supabase
+      .from('bosses')
+      .select('id, slug, title, tag, pass_accuracy, time_limit_s, sort_order')
+      .eq('topic_id', topicId)
+      .order('sort_order'),
+  )
+}
+
+/** A random set of questions for one boss (exercises carrying its tag). */
+export async function loadBossExercises(tag, count) {
+  const rows = unwrap(
+    await supabase.from('exercises').select(EXERCISE_FIELDS).contains('tags', [tag]).limit(1000),
+  )
+  return shuffle(rows).slice(0, count)
+}
+
+// ---------------------------------------------------------------------
+// Accounts and approval
+// ---------------------------------------------------------------------
+
+/** Own profile: approval status and admin flag. */
+export async function loadMyProfile() {
+  const { data: auth } = await supabase.auth.getUser()
+  const rows = unwrap(
+    await supabase.from('profiles').select('approved_at, is_admin').eq('id', auth.user.id),
+  )
+  const p = rows[0] ?? { approved_at: null, is_admin: false }
+  return { approved: Boolean(p.approved_at) || p.is_admin, isAdmin: p.is_admin }
+}
+
+/** All accounts with activity (admins only; the database refuses others). */
+export async function adminListUsers() {
+  return unwrap(await supabase.rpc('admin_list_users'))
+}
+
+/** Approve (true) or revoke (false) a student account (admins only). */
+export async function adminSetApproval(userId, approved) {
+  unwrap(await supabase.rpc('admin_set_approval', { p_user: userId, p_approved: approved }))
+}
+
 /** League standing for the current student. */
 export async function loadLeague() {
   const rows = unwrap(
@@ -269,8 +350,11 @@ export async function finishAttempt(attemptId, answers, totals) {
         finished_at: new Date().toISOString(),
         score: totals.score,
         correct_count: totals.correct,
-        total_count: answers.length,
+        // total can be fixed by the game (boss: unanswered questions count as missed)
+        total_count: totals.total ?? answers.length,
         duration_ms: totals.durationMs,
+        // e.g. { scope_label: 'won' } for a defeated boss; read by the records trigger
+        ...(totals.extra ?? {}),
       })
       .eq('id', attemptId),
   )
