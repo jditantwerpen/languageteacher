@@ -144,7 +144,7 @@ input:focus { border-color: var(--coral); }
   text-align: left; background: #efe6f7; display: flex; align-items: center; gap: 10px;
 }
 .option:hover { background: #e3d6f0; }
-.key {
+.option .key {
   display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
   background: var(--card); font-size: 0.8rem; color: var(--muted);
 }
