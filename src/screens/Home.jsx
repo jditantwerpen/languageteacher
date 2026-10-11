@@ -11,7 +11,11 @@ export default function Home({ onStart, onVocab, onTest }) {
   const [league, setLeague] = useState(null)
   const [error, setError] = useState('')
 
+  const [email, setEmail] = useState('')
+
   useEffect(() => {
+    // Show who is logged in: avoids playing on a classmate's account
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ''))
     Promise.all([loadSkills(), loadLeague()])
       .then(([s, l]) => {
         setSkills(s)
@@ -24,7 +28,10 @@ export default function Home({ onStart, onVocab, onTest }) {
     <main className="screen">
       <header className="topbar">
         <h1 className="logo small-logo">Taal<span>spel</span></h1>
-        <button className="link" onClick={() => supabase.auth.signOut()}>Uitloggen</button>
+        <div className="who">
+          <span className="small">{email}</span>
+          <button className="link" onClick={() => supabase.auth.signOut()}>Uitloggen</button>
+        </div>
       </header>
 
       {league && (

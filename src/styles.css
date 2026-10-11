@@ -48,7 +48,9 @@ h2 { font-size: 1.4rem; }
 .big { font-family: var(--display); font-size: 1.6rem; font-weight: 700; margin: 0; }
 .error { color: var(--coral); }
 
-.topbar { display: flex; justify-content: space-between; align-items: center; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.who { display: flex; flex-direction: column; align-items: flex-end; min-width: 0; }
+.who .small { color: var(--ghost); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .card {
   background: var(--card);
@@ -161,6 +163,15 @@ input:focus { border-color: var(--coral); }
 .level { display: flex; align-items: center; gap: 14px; text-align: left; background: var(--card); }
 .level > span:last-child { display: flex; flex-direction: column; gap: 2px; }
 .level-emoji { font-size: 1.8rem; }
+
+/* --- Login tabs --- */
+.tabs { display: grid; grid-template-columns: 1fr 1fr; background: #efe6f7; border-radius: 12px; padding: 4px; }
+.tabs button {
+  font: inherit; font-weight: 700; border: 0; border-radius: 9px; padding: 10px;
+  background: transparent; color: var(--muted); cursor: pointer;
+}
+.tabs button.on { background: #fff; color: var(--ink); }
+form.card input + label { margin-top: 4px; }
 
 /* --- Test --- */
 .tile.test-tile { background: var(--coral); color: #fff; }
