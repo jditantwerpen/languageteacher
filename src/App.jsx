@@ -7,6 +7,7 @@ import Home from './screens/Home'
 import VocabMenu from './screens/VocabMenu'
 import Round from './screens/Round'
 import Result from './screens/Result'
+import Test from './screens/Test'
 
 export default function App() {
   const [session, setSession] = useState(undefined) // undefined = still checking
@@ -30,6 +31,8 @@ export default function App() {
     setScreen({ name: 'round', config, back: backTo, round: (screen.round ?? 0) + 1 })
 
   switch (screen.name) {
+    case 'test':
+      return <Test key={screen.round} onHome={goHome} />
     case 'vocabMenu':
       return (
         <VocabMenu
@@ -61,6 +64,7 @@ export default function App() {
         <Home
           onStart={(opts) => play(speedRoundConfig(opts), { name: 'home' })}
           onVocab={(topicSlug) => setScreen({ name: 'vocabMenu', topicSlug })}
+          onTest={() => setScreen({ name: 'test', round: (screen.round ?? 0) + 1 })}
         />
       )
   }

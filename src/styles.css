@@ -162,6 +162,15 @@ input:focus { border-color: var(--coral); }
 .level > span:last-child { display: flex; flex-direction: column; gap: 2px; }
 .level-emoji { font-size: 1.8rem; }
 
+/* --- Test --- */
+.tile.test-tile { background: var(--coral); color: #fff; }
+.test-info { text-align: left; }
+.test-info p { margin: 0; }
+.out-of { font-size: 0.45em; opacity: 0.6; margin-left: 2px; }
+.next { width: 100%; margin-top: 12px; }
+.section-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; }
+.bar.light { background: #efe6f7; }
+
 /* --- Result --- */
 .record { font-family: var(--display); font-size: 1.5rem; color: var(--coral); margin: 0; animation: pop 0.4s; }
 .final-score { font-family: var(--display); font-size: 4rem; font-weight: 900; margin: 0; line-height: 1; }

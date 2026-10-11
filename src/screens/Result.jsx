@@ -1,10 +1,15 @@
 // End of round: score, record check and the mistakes to learn from.
-export default function Result({ result, onAgain, onHome }) {
-  const { score, correct, answers, exercises, previousBest, title } = result
+const WARNING_TEXT = {
+  accent: 'Enkel het accent was fout.',
+  article: 'Enkel het lidwoord was fout.',
+}
+
+export default function Result({ result, config, onAgain, onHome }) {
+  const { score, correct, answers, exercises, previousBest } = result
   const isRecord = previousBest === null || score > previousBest
   const accuracy = answers.length ? Math.round((correct / answers.length) * 100) : 0
 
-  // Wrong or accent answers, with the exercise they belong to
+  // Wrong or warned answers, with the exercise they belong to
   const byId = Object.fromEntries(exercises.map((e) => [e.id, e]))
   const mistakes = answers
     .filter((a) => a.result !== 'correct')
@@ -13,7 +18,7 @@ export default function Result({ result, onAgain, onHome }) {
   return (
     <main className="screen">
       <section className="card center">
-        <p className="small">Speed round · {title}</p>
+        <p className="small">{config.title}</p>
         {isRecord && <p className="record">🏆 Nieuw record!</p>}
         <p className="final-score">{score}</p>
         <p className="small">punten</p>
@@ -30,13 +35,13 @@ export default function Result({ result, onAgain, onHome }) {
           <ul className="mistakes">
             {mistakes.map((m, i) => (
               <li key={i} className={m.result}>
-                <span className="small">{m.exercise.prompt.pronoun} · {m.exercise.prompt.infinitive} · {m.exercise.prompt.tense}</span>
+                <span className="small">{config.describe(m.exercise)}</span>
                 <span>
                   <s>{m.given}</s> → <strong>{m.exercise.correct_answer}</strong>
                 </span>
-                <span className="small">
-                  {m.result === 'accent' ? 'Enkel het accent was fout.' : m.exercise.feedback_nl}
-                </span>
+                {(WARNING_TEXT[m.result] || m.exercise.feedback_nl) && (
+                  <span className="small">{WARNING_TEXT[m.result] ?? m.exercise.feedback_nl}</span>
+                )}
               </li>
             ))}
           </ul>

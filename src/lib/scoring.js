@@ -12,7 +12,7 @@ export function multiplierFor(streak) {
 /**
  * Apply one answer result to the running state.
  * - correct: streak +1, points at the (new) multiplier
- * - accent:  base points only, streak unchanged (no combo bonus)
+ * - accent / article: base points only, streak unchanged (no combo bonus)
  * - wrong:   streak back to 0, no points
  */
 export function applyResult(state, result) {
@@ -20,7 +20,7 @@ export function applyResult(state, result) {
     const streak = state.streak + 1
     return { score: state.score + BASE_POINTS * multiplierFor(streak), streak }
   }
-  if (result === 'accent') {
+  if (result === 'accent' || result === 'article') {
     return { score: state.score + BASE_POINTS, streak: state.streak }
   }
   return { score: state.score, streak: 0 }
